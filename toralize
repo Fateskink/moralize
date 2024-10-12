@@ -1,0 +1,7 @@
+#!/bin/bash
+
+export LD_PRELOAD=/Users/admin/code/mycode/c/toralize/toralize.so
+
+${@}
+
+unset LD_PRELOAD
