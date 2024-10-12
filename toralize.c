@@ -7,46 +7,47 @@ Req *request(struct sockaddr_in *sock2)
   Req *req;
 
   req = malloc(reqsize);
-  //  use `->` instead of `.` cause of req is a pointer
-  req->vn = 4; // version number
-  req->cd = 1; // command code
-  req->dstport = sock2->sin_port;
-  req->dstip = sock2->sin_addr.s_addr;
-  strncpy((char *)req->userid, USERNAME, 8);
+  req->vn = 4;                               // version number
+  req->cd = 1;                               // command code
+  req->dstport = sock2->sin_port;            // destination port
+  req->dstip = sock2->sin_addr.s_addr;       // destination IP
+  strncpy((char *)req->userid, USERNAME, 8); // user ID
   /*
-  In the whole project there are some attributes or variables
-  which in string type with specific length like `USERNAME`,
-  in function `strncpy` above, the length is 8
-  but the value was defined (`toraliz`) is 7 character length
-  the left one is for `null terminator` (`\0`) character
+    In the whole project there are some attributes or variables
+    which in string type with specific length like `USERNAME`,
+    in function `strncpy` above, the length is 8
+    but the value was defined (`toraliz`) is 7 character length
+    the left one is for `null terminator` (`\0`) character
   */
   return req;
 }
 
 int connect(int s2, const struct sockaddr *sock2, socklen_t address_len)
 {
-  int s;
-  struct sockaddr_in sock;
   Req *req;
   Res *res;
-  char buf[ressize];
+  struct sockaddr_in sock;
+
+  int s;
   int success;
-  char tmp[512];
   int (*p)(int, const struct sockaddr *, socklen_t);
 
-  // assign funtion poiter to p with function name `connect`
+  char buf[ressize];
+
+  // Assign funtion poiter to p with function name `connect`
   p = dlsym(RTLD_NEXT, "connect");
 
   /*
-  AF_INET là một hằng số được sử dụng trong lập trình mạng
-  để chỉ định giao thức địa chỉ IPv4
-  (Internet Protocol Version 4 | 32-bit).
-  Khi tạo một socket trong ngôn ngữ lập trình (như C, C++, hoặc Python),
-  bạn phải cung cấp một "address family" (họ địa chỉ),
-  và AF_INET đại diện cho các địa chỉ IPv4.
+    AF_INET is a constant used in network programming
+    to specify the address family for IPv4
+    (Internet Protocol Version 4 | 32-bit).
+    When creating a socket in programming languages
+    (like C, C++, or Python),
+    you must provide an "address family",
+    and AF_INET represents IPv4 addresses.
 
-  SOCK_STREAM: Xác định rằng socket này sẽ sử dụng giao thức TCP
-  (giao thức truyền dữ liệu tin cậy, có kết nối).
+    SOCK_STREAM: Indicates that this socket will use the TCP protocol
+    (a reliable, connection-oriented data transmission protocol).
   */
   s = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -57,35 +58,40 @@ int connect(int s2, const struct sockaddr *sock2, socklen_t address_len)
     return -1;
   }
 
-  // Chỉ định "family" (họ) của địa chỉ được sử dụng trong giao tiếp mạng
+  // Specify the "family" of the address used for network communication
   sock.sin_family = AF_INET;
 
-  // Số cổng (port) được sử dụng để giao tiếp trên mạng.
-  // htons() để đảm bảo thứ tự byte đúng khi truyền dữ liệu qua mạng
+  /*
+    The port number used for network communication.
+    htons() ensures the correct byte order when transmitting data
+    over the network
+  */
   sock.sin_port = htons(PROXYPORT);
 
-  // Địa chỉ IP
+  // Internet address manipulation routines
   sock.sin_addr.s_addr = inet_addr(PROXY);
 
   /*
-  (struct sockaddr *)&sock:
-  sock là một cấu trúc kiểu sockaddr_in,
-  chứa thông tin về địa chỉ IP và số cổng mà bạn muốn kết nối.
-  sockaddr_in là cấu trúc chứa thông tin chi tiết cho giao thức IPv4.
-  Tuy nhiên, hàm connect yêu cầu địa chỉ
-  phải được truyền vào dưới dạng sockaddr (kiểu chung),
-  vì vậy ta cần ép kiểu (struct sockaddr *) để đảm bảo đúng định dạng.
+    (struct sockaddr *)&sock:
+    sock is a sockaddr_in structure,
+    containing information about the IP address and
+    port number you want to connect to.
+    sockaddr_in is a structure that contains detailed information
+    for the IPv4 protocol.
+    However, the connect function requires the address
+    to be passed as a sockaddr (generic type),
+    so we need to cast it to (struct sockaddr *) to ensure the correct format.
 
-  sizeof(sock)
-  Hàm connect cần biết độ dài của địa chỉ bạn đang truyền
-  để đảm bảo kết nối được thiết lập đúng.
+    sizeof(sock)
+    The connect function needs to know the length of the address you are passing
+    to ensure the connection is established correctly.
 
-  # Terminal command (tm) : man 2 connect
+    Terminal command (tm) : man 2 connect
     Upon successful completion, a value of 0 is returned.
     Otherwise, a value of -1 is returned and
     the global integer variable errno is set to indicate the error.
 
-  # Prerequisite: Your device must be installed `tor`
+    Prerequisite: Your device must be installed `tor`
     to run toralize
 
     PROXY and PROXY_PORT which were declared
@@ -94,7 +100,7 @@ int connect(int s2, const struct sockaddr *sock2, socklen_t address_len)
   */
   if (p(s, (struct sockaddr *)&sock, sizeof(sock)))
   {
-    perror("Connect failed");
+    perror("Connect failed\n");
 
     return -1;
   }

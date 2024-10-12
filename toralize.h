@@ -10,14 +10,6 @@
 #include <netinet/in.h>
 #include <dlfcn.h>
 
-/*
-socket() - create an endpoint for communication
-connect() - initiate a connection on a socket
-close() - delete a descriptor
-htons() - convert values between host and network byte order
-inet_addr() -  Internet address manipulation routines
-*/
-
 #define PROXY "127.0.0.1"
 #define PROXYPORT 9050
 #define USERNAME "toraliz"
