@@ -70,11 +70,4 @@ Req *request(const char *dstip, const int dstport);
 */
 Req *request(struct sockaddr_in *);
 
-/*
-char **argv cho phép chương trình nhận nhiều chuỗi ký tự
-(các đối số) từ dòng lệnh,
-mỗi chuỗi được đại diện bởi một con trỏ char *
-*/
-// int main(int, char **);
-
 int connect(int, const struct sockaddr *, socklen_t);

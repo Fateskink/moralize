@@ -23,13 +23,9 @@ Req *request(struct sockaddr_in *sock2)
   return req;
 }
 
-// int main(int argc, char *argv[])
-// {
 int connect(int s2, const struct sockaddr *sock2, socklen_t address_len)
 {
-
-  // char *host;
-  int s; // port
+  int s;
   struct sockaddr_in sock;
   Req *req;
   Res *res;
@@ -38,16 +34,7 @@ int connect(int s2, const struct sockaddr *sock2, socklen_t address_len)
   char tmp[512];
   int (*p)(int, const struct sockaddr *, socklen_t);
 
-  // if (argc < 3)
-  // {
-  //   fprintf(stderr, "Usage: %s <host> <port>\n",
-  //           argv[0]);
-
-  //   return -1;
-  // }
-
-  // host = argv[1];
-  // port = atoi(argv[2]);
+  // assign funtion poiter to p with function name `connect`
   p = dlsym(RTLD_NEXT, "connect");
 
   /*
@@ -143,19 +130,10 @@ int connect(int s2, const struct sockaddr *sock2, socklen_t address_len)
 
   printf("Connect through the proxy.\n");
 
-  // memset(tmp, 0, 512); // initialize tmp data
-  // snprintf(tmp, 511,
-  //          "HEAD / HTTP/1.0\r\n"
-  //          "Host: www.networktechnology.org\r\n"
-  //          "\r\n");
-
-  // write(s, tmp, strlen(tmp)); // send request
-  // memset(tmp, 0, 512);        // clear | reset tmp data
-
-  // read(s, tmp, 511);
-  // printf("'%s'\n", tmp);
-
-  // close(s);
+  /*
+  Duplicate s to s2.
+  This action keep s is always be the original socket
+  */
   dup2(s, s2);
   free(req);
 
