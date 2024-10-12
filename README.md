@@ -46,7 +46,7 @@ pwd
 ```
 
 Set Up the Bash Script:
-Create a bash script file named toralize with the following contents to set the LD_PRELOAD environment variable:
+Create a bash script file named `toralize` with the following contents to set the LD_PRELOAD environment variable:
 ```
 #!/bin/bash
 export LD_PRELOAD="/path/to/toralize.so"
