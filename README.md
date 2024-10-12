@@ -61,11 +61,26 @@ sudo mv toralize /usr/bin/
 sudo chmod +x /usr/bin/toralize
 ```
 
-PROXY: The IP address of the Tor proxy (default is 127.0.0.1).
-PROXYPORT: The port number of the Tor proxy (default is 9050).
-Usage
+`PROXY`: The IP address of the Tor proxy (default is 127.0.0.1).
+
+`PROXYPORT`: The port number of the Tor proxy (default is 9050).
+
+`Usage`
 Once the application is set up and running, it will intercept socket connection calls and route them through the specified Tor proxy. You can integrate this functionality into existing applications that utilize network sockets.
 
+Get website addess
+
+```
+host google.com
+```
+google.com has address [142.250.66.46](http://142.250.66.46)
+
+Run toralize with command
+```
+toralize curl http://142.250.66.46
+or
+toralize curl http://google.com
+```
 ### Acknowledgments
 
 The Tor Project for its commitment to privacy and anonymity online.
