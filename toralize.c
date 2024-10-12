@@ -114,7 +114,7 @@ int connect(int s2, const struct sockaddr *sock2, socklen_t address_len)
 
   printf("Connect to proxy\n");
 
-  req = request((struct sockaddr_in *)&sock2);
+  req = request((struct sockaddr_in *)sock2);
   write(s, req, reqsize);  // send request to socket s
   memset(buf, 0, ressize); // initialize buf data
 
